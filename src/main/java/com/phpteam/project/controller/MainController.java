@@ -3,7 +3,9 @@ package com.phpteam.project.controller;
 import com.phpteam.project.model.Appointment;
 import com.phpteam.project.model.Doctor;
 import com.phpteam.project.model.Patient;
+import com.phpteam.project.service.AppointmentService;
 import com.phpteam.project.service.DoctorService;
+import com.phpteam.project.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -126,7 +128,7 @@ public class MainController {
     @PostMapping("/appointment/update/{id}")
     public String updateAppointment(@PathVariable("id") long theId, @ModelAttribute("editAppointment") Appointment theAppointment) {
         theAppointment.setId(theId);
-        appointmentService.updateAppointment(theAppointment);
+        appointmentService.saveAppointment(theAppointment);
         return "redirect:/clinic/list-appointments";
     }
 
