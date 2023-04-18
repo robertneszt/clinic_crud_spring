@@ -1,7 +1,8 @@
 package com.phpteam.project.service;
 
 import com.phpteam.project.entity.DoctorEntity;
-import com.phpteam.project.mapper.DoctorMapperHelper;
+import com.phpteam.project.exception.EntityNotFoundException;
+import com.phpteam.project.mapper.MapperHelper;
 import com.phpteam.project.model.Doctor;
 import com.phpteam.project.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,10 @@ import java.util.Optional;
 public class DoctorServiceImpl implements DoctorService{
 
     private final DoctorRepository doctorRepository;
-    private final DoctorMapperHelper mapperHelper;
+    private final MapperHelper mapperHelper;
 
     @Autowired
-    public DoctorServiceImpl(DoctorRepository doctorRepository, DoctorMapperHelper mapperHelper) {
+    public DoctorServiceImpl(DoctorRepository doctorRepository, MapperHelper mapperHelper) {
         this.doctorRepository = doctorRepository;
         this.mapperHelper = mapperHelper;
     }
@@ -42,8 +43,36 @@ public class DoctorServiceImpl implements DoctorService{
     }
 
     @Override
-    public void deleteDoctor(Long docId) {
-        doctorRepository.deleteById(docId);
+    public Doctor getDoctorByName(String name) {
+        Optional<DoctorEntity> foundDoc=  doctorRepository.findByName(name);
+        if(foundDoc.isEmpty()){
+            throw new EntityNotFoundException("The doctor not found, please enter registered email ");
+        }else{
+            return mapperHelper.convertDoctorEntityToDoctor(foundDoc.get());
+        }
     }
+
+    @Override
+    public Doctor getDoctorByEmail(String emailId) {
+      Optional<DoctorEntity> foundDoc=  doctorRepository.findByEmail(emailId);
+       if(foundDoc.isEmpty()){
+           throw new EntityNotFoundException("The doctor not found, please enter registered email ");
+       }else{
+           return mapperHelper.convertDoctorEntityToDoctor(foundDoc.get());
+       }
+    }
+//    public Doctor getDoctorByName(String name) {
+//        Optional<DoctorEntity> foundDoc=  doctorRepository.findByName(name);
+//        if(foundDoc.isEmpty()){
+//            throw new EntityNotFoundException("The doctor not found, please enter registered email ");
+//        }else{
+//            return mapperHelper.convertDoctorEntityToDoctor(foundDoc.get());
+//        }
+//    }
+
+//    @Override
+//    public void deleteDoctor(Long docId) {
+//        doctorRepository.deleteById(docId);
+//    }
 
 }

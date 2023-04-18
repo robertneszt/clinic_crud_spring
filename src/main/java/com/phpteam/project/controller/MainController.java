@@ -1,5 +1,6 @@
 package com.phpteam.project.controller;
 
+import com.phpteam.project.exception.EntityNotFoundException;
 import com.phpteam.project.model.Appointment;
 import com.phpteam.project.model.Doctor;
 import com.phpteam.project.model.Patient;
@@ -27,7 +28,10 @@ public class MainController {
         this.patientService = patientService;
         this.appointmentService = appointmentService;
     }
-
+    @GetMapping("/")
+    public String index() {
+        return "index";
+    }
     @GetMapping("/list-doctors")
     public String listDoctors(Model theModel){
         List<Doctor> theDoctors = doctorService.getAllDoctors();
@@ -40,6 +44,52 @@ public class MainController {
         Doctor existingDoc = doctorService.getDoctorById(theId);
         theModel.addAttribute("doctor", existingDoc);
         return "doctor/doctor-detail";
+    }
+
+    //trying 3 different login methods, id, email and name just as test TODO
+    // made email as unique and will use email to login
+    // doctor can view his appointments, all appointments, book an appointment and modify an appointment.
+    // based upon this we can crate login of patient and give some options.
+    // patients can login an can see just there appointments or can modify there appointments
+    // TODO: 2023-04-18
+    @RequestMapping("/doctorLogin")
+    public String getDoctorByEmail(@RequestParam(value = "docEmail") String docEmail, Model theModel){
+
+        try{
+            Doctor existingDoc = doctorService.getDoctorByEmail(docEmail);
+            theModel.addAttribute("doctor", existingDoc);
+            return "doctor/doctor-detail";
+
+        }catch (EntityNotFoundException exception){
+            theModel.addAttribute("doctor", null);
+            theModel.addAttribute("exceptionMessage", exception.getMessage());
+            return "error";
+        }
+
+    }
+    @RequestMapping("/doctorLogin2")
+    public String getDoctorByName(@RequestParam(value = "docName") String name, Model theModel){
+
+        try{
+            Doctor existingDoc = doctorService.getDoctorByName(name);
+            theModel.addAttribute("doctor", existingDoc);
+            return "doctor/doctor-detail";
+
+        }catch (EntityNotFoundException exception){
+            theModel.addAttribute("doctor", null);
+            theModel.addAttribute("exceptionMessage", exception.getMessage());
+            return "error";
+        }
+
+    }
+    @RequestMapping("/doctorLogin3")
+    public String getDoctorByID(@RequestParam(value = "docId") Long docId, Model theModel){
+
+            Doctor existingDoc = doctorService.getDoctorById(docId);
+            theModel.addAttribute("doctor", existingDoc);
+            return "doctor/doctor-detail";
+
+
     }
 
     @GetMapping("/list-patients")

@@ -23,11 +23,11 @@ public class AppointmentEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doc_id")
-    private Doctor doctor;
+    private DoctorEntity doctorEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id")
-    private Patient patient;
+    private PatientEntity patientEntity;
 
     @Column(name = "appointment_datetime")
     private LocalDateTime datetime;

@@ -1,7 +1,6 @@
 package com.phpteam.project.service;
 
 import com.phpteam.project.model.Appointment;
-import com.phpteam.project.model.Doctor;
 
 import java.util.List;
 
@@ -11,7 +10,7 @@ public interface AppointmentService {
 
     Long saveAppointment(Appointment appointment);
 
-    Appointment getAppointmentById();
+    Appointment getAppointmentById(Long theId);
 
     List<Appointment> getAppointmentsByDocId(Long docId);
 

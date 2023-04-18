@@ -23,7 +23,7 @@ public class DoctorEntity {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "email")
+    @Column(name = "email",unique=true)
     private String email;
 
     @Column(name = "phone")
@@ -32,8 +32,8 @@ public class DoctorEntity {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "role")
-    private Enum role;
+//    @Column(name = "role")
+//    private Enum role;
 
 
 }
