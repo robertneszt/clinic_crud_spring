@@ -91,6 +91,20 @@ public class MainController {
 
 
     }
+    @RequestMapping("/patientLogin")
+    public String getPatientByEmail(@RequestParam(value = "patEmail") String patEmail, Model theModel) {
+
+        try {
+            Patient existingPat = patientService.getPatientByEmail(patEmail);
+            theModel.addAttribute("patient", existingPat);
+            return "patient/patient-detail";
+
+        } catch (EntityNotFoundException exception) {
+            theModel.addAttribute("patient", null);
+            theModel.addAttribute("exceptionMessage", exception.getMessage());
+            return "error";
+        }
+    }
 
     @GetMapping("/list-patients")
     public String listPatients(Model theModel){

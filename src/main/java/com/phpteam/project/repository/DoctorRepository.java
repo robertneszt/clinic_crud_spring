@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface DoctorRepository extends JpaRepository<DoctorEntity, Long> {
     @Query("SELECT e FROM DoctorEntity e WHERE e.email = ?1")
-    Optional<DoctorEntity> findByEmail(String emailId);
+    Optional<DoctorEntity> findByEmail(String docEmailId);
     @Query("SELECT e FROM DoctorEntity e WHERE e.firstName = ?1")
     Optional<DoctorEntity> findByName(String name);
 }

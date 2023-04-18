@@ -33,4 +33,9 @@ public class PatientServiceImpl implements PatientService {
         Optional<PatientEntity> foundPat = patientRepository.findById(patId);
         return foundPat.map(mapperHelper::convertPatientEntityToPatient).orElse(null);
     }
+    public Patient getPatientByEmail(String patEmail) {
+        Optional<PatientEntity> foundPat = patientRepository.findByEmail(patEmail);
+        return foundPat.map(mapperHelper::convertPatientEntityToPatient).orElse(null);
+    }
 }
+

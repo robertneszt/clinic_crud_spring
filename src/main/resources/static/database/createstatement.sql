@@ -1,7 +1,7 @@
 CREATE DATABASE medical_clinic;
 
 USE medical_clinic;
-
+DROP TABLE IF EXISTS doctor
 CREATE TABLE doctor
   (
      id         INT auto_increment PRIMARY KEY,
@@ -12,10 +12,10 @@ CREATE TABLE doctor
      password   VARCHAR(50) NOT NULL,
      role       ENUM('doctor', 'patient') NOT NULL DEFAULT 'doctor'
   );
-
+DROP TABLE IF EXISTS patient
 CREATE TABLE patient
   (
-     id         VARCHAR(12) PRIMARY KEY,
+     id         INT auto_increment PRIMARY KEY,
      first_name VARCHAR(50) NOT NULL,
      last_name  VARCHAR(50) NOT NULL,
      email      VARCHAR(50) NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE patient
      password   VARCHAR(10) NOT NULL,
      role       ENUM('doctor', 'patient') NOT NULL DEFAULT 'patient'
   );
-
+DROP TABLE IF EXISTS medical_record
 CREATE TABLE medical_record
   (
      id                   INT auto_increment PRIMARY KEY,
@@ -56,24 +56,24 @@ VALUES     (1, 'John', 'Doe', 'john.doe@example.com', '5145678901', 'doctor123',
  (5,  'David',  'Kim',  'david.kim@example.com',  '4385678905',  'doctor777',  'doctor');
 
 INSERT INTO patient
-            (id,  first_name,  last_name,  email,  phone,  password,  role)
-VALUES     ('ABC123', 'Alice', 'Johnson', 'alice.johnson@example.com', '5141234567', 'patient111', 'patient'),
- ('DEF456',  'Bob',  'Smith',  'bob.smith@example.com',  '4382345678',  'patient222',  'patient'),
- ('GHI789',  'Charlie',  'Lee',  'charlie.lee@example.com',  '5143456789',  'patient333',  'patient'),
- ('JKL012',  'David',  'Davis',  'david.davis@example.com',  '4384567890',  'patient444',  'patient'),
- ('MNO345',  'Elizabeth',  'Kim',  'elizabeth.kim@example.com',  '5145678901',  'patient555',  'patient'),
- ('PQR678',  'Frank',  'Wilson',  'frank.wilson@example.com',  '4386789012',  'patient666',  'patient'),
- ('STU901',  'Grace',  'Brown',  'grace.brown@example.com',  '5147890123',  'patient777',  'patient'),
- ('VWX234',  'Henry',  'Taylor',  'henry.taylor@example.com',  '4388901234',  'patient888',  'patient'),
- ('YZAB56',  'Isabella',  'Anderson',  'isabella.anderson@example.com',  '5149012345',  'patient999',  'patient'),
- ('CDE789',  'Jack',  'Martin',  'jack.martin@example.com',  '4380123456',  'patient100',  'patient'),
- ('FGH012',  'Kelly',  'Lee',  'kelly.lee@example.com',  '5141234567',  'patient110',  'patient'),
- ('IJK345',  'Lily',  'Wilson',  'lily.wilson@example.com',  '4382345678',  'patient112',  'patient'),
- ('LMN678',  'Mike',  'Brown',  'mike.brown@example.com',  '5143456789',  'patient113',  'patient'),
- ('OPQ901',  'Nicole',  'Taylor',  'nicole.taylor@example.com',  '4384567890',  'patient114',  'patient'),
- ('RST234',  'Olivia',  'Anderson',  'olivia.anderson@example.com',  '5145678901',  'patient115',  'patient'),
- ('UVW567',  'Peter',  'Martin',  'peter.martin@example.com',  '4386789012',  'patient116',  'patient'),
- ('XYZ890',  'Queenie',  'Lee',  'queenie.lee@example.com',  '5147890123',  'patient117',  'patient'),
- ('ABD123',  'Rachel',  'Wilson',  'rachel.wilson@example.com',  '4388901234',  'patient118',  'patient'),
- ('CEF456',  'Sam',  'Brown',  'sam.brown@example.com',  '5149012345',  'patient119',  'patient'),
- ('GHL789',  'Tom',  'Taylor',  'tom.taylor@example.com',  '4380123456',  'patient120',  'patient');
+            (first_name,  last_name,  email,  phone,  password,  role)
+VALUES     ('Alice', 'Johnson', 'alice.johnson@example.com', '5141234567', 'patient111', 'patient'),
+ ('Bob',  'Smith',  'bob.smith@example.com',  '4382345678',  'patient222',  'patient'),
+ ('Charlie',  'Lee',  'charlie.lee@example.com',  '5143456789',  'patient333',  'patient'),
+ ('David',  'Davis',  'david.davis@example.com',  '4384567890',  'patient444',  'patient'),
+ ('Elizabeth',  'Kim',  'elizabeth.kim@example.com',  '5145678901',  'patient555',  'patient'),
+ ('Frank',  'Wilson',  'frank.wilson@example.com',  '4386789012',  'patient666',  'patient'),
+ ('Grace',  'Brown',  'grace.brown@example.com',  '5147890123',  'patient777',  'patient'),
+ ('Henry',  'Taylor',  'henry.taylor@example.com',  '4388901234',  'patient888',  'patient'),
+ ('Isabella',  'Anderson',  'isabella.anderson@example.com',  '5149012345',  'patient999',  'patient'),
+ ('Jack',  'Martin',  'jack.martin@example.com',  '4380123456',  'patient100',  'patient'),
+ ('Kelly',  'Lee',  'kelly.lee@example.com',  '5141234567',  'patient110',  'patient'),
+ ('Lily',  'Wilson',  'lily.wilson@example.com',  '4382345678',  'patient112',  'patient'),
+ ('Mike',  'Brown',  'mike.brown@example.com',  '5143456789',  'patient113',  'patient'),
+ ('Nicole',  'Taylor',  'nicole.taylor@example.com',  '4384567890',  'patient114',  'patient'),
+ ('Olivia',  'Anderson',  'olivia.anderson@example.com',  '5145678901',  'patient115',  'patient'),
+ ('Peter',  'Martin',  'peter.martin@example.com',  '4386789012',  'patient116',  'patient'),
+ ('Queenie',  'Lee',  'queenie.lee@example.com',  '5147890123',  'patient117',  'patient'),
+ ('Rachel',  'Wilson',  'rachel.wilson@example.com',  '4388901234',  'patient118',  'patient'),
+ ('Sam',  'Brown',  'sam.brown@example.com',  '5149012345',  'patient119',  'patient'),
+ ('Tom',  'Taylor',  'tom.taylor@example.com',  '4380123456',  'patient120',  'patient');

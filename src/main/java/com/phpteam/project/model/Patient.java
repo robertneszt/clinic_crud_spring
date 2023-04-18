@@ -23,7 +23,7 @@ public class Patient {
     @NotEmpty(message = "Email cannot be empty.")
     @Email
     private String email;
-    @NotNull(message = "Phone  cannot be empty.")
+    @NotNull(message = "Phone cannot be empty.")
     private String phone;
 
     private String password;
