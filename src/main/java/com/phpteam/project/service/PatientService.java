@@ -16,6 +16,7 @@ public interface PatientService {
 
     // Will enable this if we implement crud for patient
 //    void deletePatient(Long patId);
+    Patient getPatientByEmail(String patEmail);
 
-
+    void savePatient(Patient patient);
 }

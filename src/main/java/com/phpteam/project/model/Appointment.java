@@ -17,13 +17,16 @@ public class Appointment {
 
     private Long id;
 
-    private Doctor doctor;
+//    private Doctor doctor;
+//
+//    private Patient patient;
+    private Integer doctor;
 
-    private Patient patient;
+    private Integer patient;
 
     private LocalDateTime datetime;
 
-    private Enum status;
+    private String status;
 
 
 }

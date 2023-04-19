@@ -13,6 +13,29 @@
 <body>
 <div class="container">
     <h3>Schedule your appointments here</h3>
+    <h2>Add Appointment</h2>
+   <form th:action="@{/clinic/appointment/save}" th:object="${appointment}" method="POST">
+
+<!--            <input type="text" th:field="*{patient.id}" class="form-control mb-4 w-25" hidden placeholder="id">-->
+
+<!--       <select th:field="*{}">-->
+<!--           <option th:each="i : ${#numbers.sequence(0, 100)}" th:value="${i}" th:text="${i}"-->
+<!--                   th:selected="${i==75}"></option>-->
+<!--       </select>-->
+<!--       <input type="text" id="patient_email_id" th:field="*{id}"name="patient_email_id" required>-->
+            <input type="input"  th:value="${patient}" th:id="*{patient}"  >
+<!--       <input type="text" th:field="*{patient}"    >-->
+            <input type="input"   th:value="${doctor}"  th:id="*{doctor}"  >
+<!--       <input type="text" th:field="*{doctor}"   >-->
+            <label for="appointment_datetime">Date and Time:</label>
+            <input th:field="*{datetime}" type="datetime-local" id="appointment_datetime" name="appointment_datetime" required>
+            <label for="appointment_status">Status:</label>
+            <select id="appointment_status" name="appointment_status" required th:field="*{status}">
+                <option value="online">Online</option>
+                <option value="in-person">In-person</option>
+            </select>
+            <button type="submit">Create Appointment</button>
+        </form>
 </div>
 </body>
 </html>

@@ -28,7 +28,7 @@ public class Patient {
 
     private String password;
 
-    private Enum role;
+//    private Enum role;
 
 
 }

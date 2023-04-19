@@ -46,7 +46,7 @@ public class DoctorServiceImpl implements DoctorService{
     public Doctor getDoctorByName(String name) {
         Optional<DoctorEntity> foundDoc=  doctorRepository.findByName(name);
         if(foundDoc.isEmpty()){
-            throw new EntityNotFoundException("The doctor was not found, please enter a registered email. ");
+            throw new EntityNotFoundException("The doctor not found, please enter registered email ");
         }else{
             return mapperHelper.convertDoctorEntityToDoctor(foundDoc.get());
         }
@@ -56,7 +56,7 @@ public class DoctorServiceImpl implements DoctorService{
     public Doctor getDoctorByEmail(String emailId) {
       Optional<DoctorEntity> foundDoc=  doctorRepository.findByEmail(emailId);
        if(foundDoc.isEmpty()){
-           throw new EntityNotFoundException("The doctor was not found, please enter a registered email. ");
+           throw new EntityNotFoundException("The doctor not found, please enter registered email ");
        }else{
            return mapperHelper.convertDoctorEntityToDoctor(foundDoc.get());
        }

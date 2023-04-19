@@ -13,6 +13,31 @@
 <body>
 <div class="container">
     <h3>Welcome to patient details</h3>
+    <a th:href="@{/}" class="btn btn-danger btn-sm mb-3">Logout</a>
+
+    <table class="table table-bordered tabled-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:text="${patient.firstName}"></td>
+            <td th:text="${patient.lastName}"></td>
+            <td th:text="${patient.email}"></td>
+            <td th:text="${patient.phone}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a th:href="@{/clinic/}" class="btn btn-primary btn-sm mb-3">View your appointments</a>
+    <a th:href="@{/clinic/}" class="btn btn-primary btn-sm mb-3">Book new appointment</a>
+<!--    <a th:href="@{/clinic/}" class="btn btn-primary btn-sm mb-3">Modify your appointments</a>-->
+
 </div>
 </body>
 </html>

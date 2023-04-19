@@ -15,7 +15,10 @@
     <h1 class="text-danger">Error</h1>
     <p>User Not Found !</p>
     <h4>
-        <span>The user which you are looking for does not exist.</span>
+
+        <p th:text="${exceptionMessage}"></p>
+        <hr>
+        <p>The user is not exist please contact admin@syntaxsquad.ca to get registered to this clinic</p>
     </h4>
     <br> <a th:href="@{/}">Back to home</a>
 

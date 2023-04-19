@@ -7,9 +7,11 @@ import com.phpteam.project.model.Patient;
 import com.phpteam.project.service.AppointmentService;
 import com.phpteam.project.service.DoctorService;
 import com.phpteam.project.service.PatientService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -67,36 +69,49 @@ public class MainController {
         }
 
     }
-    @RequestMapping("/doctorLogin2")
-    public String getDoctorByName(@RequestParam(value = "docName") String name, Model theModel){
+//    @RequestMapping("/doctorLogin2")
+//    public String getDoctorByName(@RequestParam(value = "docName") String name, Model theModel){
+//
+//        try{
+//            Doctor existingDoc = doctorService.getDoctorByName(name);
+//            theModel.addAttribute("doctor", existingDoc);
+//            return "doctor/doctor-detail";
+//
+//        }catch (EntityNotFoundException exception){
+//            theModel.addAttribute("doctor", null);
+//            theModel.addAttribute("exceptionMessage", exception.getMessage());
+//            return "error";
+//        }
+//
+//    }
+//    @RequestMapping("/doctorLogin3")
+//    public String getDoctorByID(@RequestParam(value = "docId") Long docId, Model theModel){
+//
+//            Doctor existingDoc = doctorService.getDoctorById(docId);
+//            theModel.addAttribute("doctor", existingDoc);
+//            return "doctor/doctor-detail";
+//    }
 
-        try{
-            Doctor existingDoc = doctorService.getDoctorByName(name);
-            theModel.addAttribute("doctor", existingDoc);
-            return "doctor/doctor-detail";
+    @RequestMapping("/patientLogin")
+    public String getPatientByEmail(@RequestParam(value = "patEmail") String patEmail, Model theModel) {
 
-        }catch (EntityNotFoundException exception){
-            theModel.addAttribute("doctor", null);
+        try {
+            Patient existingPat = patientService.getPatientByEmail(patEmail);
+            theModel.addAttribute("patient", existingPat);
+            return "patient/patient-detail";
+
+        } catch (EntityNotFoundException exception) {
+            theModel.addAttribute("patient", null);
             theModel.addAttribute("exceptionMessage", exception.getMessage());
             return "error";
         }
-
-    }
-    @RequestMapping("/doctorLogin3")
-    public String getDoctorByID(@RequestParam(value = "docId") Long docId, Model theModel){
-
-            Doctor existingDoc = doctorService.getDoctorById(docId);
-            theModel.addAttribute("doctor", existingDoc);
-            return "doctor/doctor-detail";
-
-
     }
 
     @GetMapping("/list-patients")
     public String listPatients(Model theModel){
         List<Patient> thePatients = patientService.getAllPatients();
         theModel.addAttribute("patients", thePatients);
-        return "patient/list-patients";
+        return "patient/patient-list";
     }
 
     @GetMapping("/patient")
@@ -104,6 +119,21 @@ public class MainController {
         Patient existingPat = patientService.getPatientById(theId);
         theModel.addAttribute("patient", existingPat);
         return "patient/patient-detail";
+    }
+
+    // Show create patient form
+    @GetMapping("patient/create-patient")
+    public String showCreatePatientForm(Model model) {
+        Patient patient = new Patient();
+        model.addAttribute("patient", patient);
+        return "patient/create-patient";
+    }
+
+    // Handle create patient form submission
+    @PostMapping("patient/create-patient")
+    public String createPatient(Patient patient) {
+        patientService.savePatient(patient);
+        return "redirect:/clinic/list-patients";
     }
 
     @GetMapping("/doctor-appointments")
@@ -148,20 +178,38 @@ public class MainController {
         return "appointment/list-appointments";
     }
 
+//    @GetMapping("/appointment/create")
+//    public String showCreateAppointmentForm(Model theModel) {
+//        List<Patient> patients = patientService.getAllPatients();
+//        List<Doctor> doctors = doctorService.getAllDoctors();
+//        Appointment appointment= new Appointment();
+//        theModel.addAttribute("appointment", appointment);
+//        theModel.addAttribute("patients", patients);
+//        theModel.addAttribute("doctors", doctors);
+//        return "appointments/create-appointment";
+//    }
     @GetMapping("/appointment/create")
-    public String showCreateAppointmentForm(Model theModel) {
+    public String showCreateAppointmentForm(@RequestParam("patId") Long theId,Model theModel) {
         List<Patient> patients = patientService.getAllPatients();
         List<Doctor> doctors = doctorService.getAllDoctors();
-        theModel.addAttribute("appointment", new Appointment());
-        theModel.addAttribute("patients", patients);
-        theModel.addAttribute("doctors", doctors);
-        return "appointment/create-appointment";
+        Doctor doctorFound= doctorService.getDoctorByName("sam");
+        Patient foundPatient = patientService.getPatientById(theId);
+        Appointment appointment= new Appointment();
+        theModel.addAttribute("appointment", appointment);
+        //theModel.addAttribute("patients", patients);
+        theModel.addAttribute("patient", theId);
+        theModel.addAttribute("doctor", doctorFound.getId());
+        return "appointments/create-appointment";
     }
 
     @PostMapping("/appointment/save")
-    public String saveAppointment(@ModelAttribute("appointment") Appointment theAppointment) {
+    public String saveAppointment(@Valid @ModelAttribute("appointment") Appointment theAppointment, BindingResult result) {
+        if(result.hasErrors()){
+            return "redirect:/clinic/list-patients";
+        }
         appointmentService.saveAppointment(theAppointment);
-        return "redirect:/clinic/list-appointments";
+
+        return "redirect:/clinic/";
     }
 
     @GetMapping("/appointment/edit/{id}")

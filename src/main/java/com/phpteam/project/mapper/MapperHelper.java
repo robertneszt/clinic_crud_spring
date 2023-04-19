@@ -1,8 +1,10 @@
 package com.phpteam.project.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.phpteam.project.entity.AppointmentEntity;
 import com.phpteam.project.entity.DoctorEntity;
 import com.phpteam.project.entity.PatientEntity;
+import com.phpteam.project.model.Appointment;
 import com.phpteam.project.model.Doctor;
 import com.phpteam.project.model.Patient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,4 +50,11 @@ public class MapperHelper {
        return mapper.convertValue(patientEntity, Patient.class);
     }
 
+    public AppointmentEntity convertAppointmentToAppointEntity(Appointment appointment){
+        return mapper.convertValue(appointment, AppointmentEntity.class);
+    }
+
+    public PatientEntity convertPatientToPatientEntity(Patient patient) {
+        return mapper.convertValue(patient, PatientEntity.class);
+    }
 }

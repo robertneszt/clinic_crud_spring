@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "medical_record")
@@ -23,16 +24,20 @@ public class AppointmentEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doc_id")
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "doc_id")
+//    @Column(name = "doc_id")
     private DoctorEntity doctorEntity;
-
+//     private Integer doctorId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id")
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "patient_id")
+//    @Column (name = "patient_id")
     private PatientEntity patientEntity;
-
+    //private Integer patientId;
     @Column(name = "appointment_datetime")
     private LocalDateTime datetime;
 
     @Column(name = "appointment_status")
-    private Enum status;
+    private String status;
 
 }

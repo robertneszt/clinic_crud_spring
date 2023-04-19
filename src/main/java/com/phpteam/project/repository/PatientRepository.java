@@ -1,6 +1,5 @@
 package com.phpteam.project.repository;
 
-import com.phpteam.project.entity.DoctorEntity;
 import com.phpteam.project.entity.PatientEntity;
 import com.phpteam.project.model.Patient;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,8 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface PatientRepository extends JpaRepository<PatientEntity, Long> {
-    //@Query("SELECT e FROM PatientEntity e WHERE e.email = ?1")
-    //Optional<PatientEntity> findByEmail(String emailId);
+    @Query("SELECT e FROM PatientEntity e WHERE e.email = ?1")
+    Optional<PatientEntity> findByEmail(String patEmailId);
 }
-
-// TODO:no function created; create function in patientserviceimp similar to doctorServiceimpl

@@ -1,12 +1,22 @@
 package com.phpteam.project.service;
 
+import com.phpteam.project.mapper.MapperHelper;
 import com.phpteam.project.model.Appointment;
+import com.phpteam.project.repository.AppointmentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService{
+    private final AppointmentRepository appointmentRepository;
+    private final MapperHelper mapperHelper;
+
+    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, MapperHelper mapperHelper) {
+        this.appointmentRepository = appointmentRepository;
+        this.mapperHelper = mapperHelper;
+    }
+
     @Override
     public List<Appointment> getAllAppointments() {
         return null;
@@ -14,7 +24,8 @@ public class AppointmentServiceImpl implements AppointmentService{
 
     @Override
     public Long saveAppointment(Appointment appointment) {
-        return null;
+        var result=appointmentRepository.save(mapperHelper.convertAppointmentToAppointEntity(appointment));
+        return result.getId();
     }
 
     @Override
