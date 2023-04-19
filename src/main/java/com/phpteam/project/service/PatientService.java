@@ -19,4 +19,8 @@ public interface PatientService {
     Patient getPatientByEmail(String patEmail);
 
     void savePatient(Patient patient);
+
+    void deletePatient(Long patId);
+
+    //TODO: instead of void, return boolean and give msg that patient has appointments to delete before being able to delete the patient themselves
 }

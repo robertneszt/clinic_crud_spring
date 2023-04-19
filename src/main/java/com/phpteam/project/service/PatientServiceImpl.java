@@ -49,4 +49,28 @@ public class PatientServiceImpl implements PatientService {
         PatientEntity patientEntity = mapperHelper.convertPatientToPatientEntity(patient);
         patientRepository.save(patientEntity);
     }
+
+//    @Override
+//    public void deletePatient(Long patId) {
+////        PatientEntity patientEntity = mapperHelper.convertPatientToPatientEntity(patient);
+//        Optional<PatientEntity> foundPat = patientRepository.findById(patId);
+//        patientRepository.delete(patientEntity);
+//
+//        if(foundPat.isEmpty()){
+//            throw new EntityNotFoundException("The patient not found, please enter a registered patient ID. ");
+//        }else{
+//           foundPat.map(mapperHelper::convertPatientEntityToPatient).orElse(null);
+//        }
+
+    @Override
+    public void deletePatient(Long patId) {
+        Optional<PatientEntity> foundPat = patientRepository.findById(patId);
+
+        if(foundPat.isPresent()){
+            PatientEntity patientEntity = foundPat.get();
+            patientRepository.delete(patientEntity);
+        } else {
+            throw new EntityNotFoundException("The patient not found, please enter a registered patient ID. ");
+        }
+    }
 }

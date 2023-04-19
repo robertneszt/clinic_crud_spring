@@ -51,8 +51,8 @@ public class MainController {
     //trying 3 different login methods, id, email and name just as test TODO
     // made email as unique and will use email to login
     // doctor can view his appointments, all appointments, book an appointment and modify an appointment.
-    // based upon this we can crate login of patient and give some options.
-    // patients can login an can see just there appointments or can modify there appointments
+    // DONE: based upon this we can crate login of patient and give some options.
+    // DONE: patients can login TODO: an can see just there appointments or can modify there appointments
     // TODO: 2023-04-18
     @RequestMapping("/doctorLogin")
     public String getDoctorByEmail(@RequestParam(value = "docEmail") String docEmail, Model theModel){
@@ -109,6 +109,7 @@ public class MainController {
 
     @GetMapping("/list-patients")
     public String listPatients(Model theModel){
+        System.out.println("listing patients");
         List<Patient> thePatients = patientService.getAllPatients();
         theModel.addAttribute("patients", thePatients);
         return "patient/patient-list";
@@ -178,7 +179,7 @@ public class MainController {
         return "appointment/list-appointments";
     }
 
-//    @GetMapping("/appointment/create")
+    //    @GetMapping("/appointment/create")
 //    public String showCreateAppointmentForm(Model theModel) {
 //        List<Patient> patients = patientService.getAllPatients();
 //        List<Doctor> doctors = doctorService.getAllDoctors();
@@ -234,5 +235,15 @@ public class MainController {
     public String deleteAppointment(@PathVariable("id") long theId) {
         appointmentService.deleteAppointment(theId);
         return "redirect:/clinic/list-appointments";
+
+
     }
+
+    @GetMapping("patient/delete/{patId}")
+    public String deletePatient(@PathVariable("patId") long patId) {
+        patientService.deletePatient(patId);
+        return "redirect:/clinic/patient/patient-list";
+
+    }
+
 }
