@@ -34,7 +34,7 @@
   </table>
   <a th:href="@{/clinic/}" class="btn btn-primary btn-sm mb-3">View your appointment schedule</a>
   <a th:href="@{/clinic/appointment/create}" class="btn btn-primary btn-sm mb-3">Book new appointment for a patient</a>
-  <a th:href="@{/clinic/list-patients}" class="btn btn-primary btn-sm mb-3">View all patients</a>
+  <a th:href="@{/clinic/list-patients(docId=${doctor.id})}" class="btn btn-primary btn-sm mb-3">View all patients</a>
 
   <!--  add buttons to view/modify all appointments-->
   <!--  add buttons to view all patients-->

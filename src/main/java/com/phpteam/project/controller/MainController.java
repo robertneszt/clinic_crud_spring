@@ -110,9 +110,11 @@ public class MainController {
     }
 
     @GetMapping("/list-patients")
-    public String listPatients(Model theModel) {
+    public String listPatients(@RequestParam("docId") Long theDocId, Model theModel) {
         System.out.println("listing patients");
         List<Patient> thePatients = patientService.getAllPatients();
+        Doctor doctorFound= doctorService.getDoctorById(theDocId);
+        theModel.addAttribute("theDoctor",doctorFound);
         theModel.addAttribute("patients", thePatients);
         return "patient/patient-list";
     }
@@ -181,29 +183,24 @@ public class MainController {
         return "appointment/list-appointments";
     }
 
-    //    @GetMapping("/appointment/create")
-//    public String showCreateAppointmentForm(Model theModel) {
-//        List<Patient> patients = patientService.getAllPatients();
-//        List<Doctor> doctors = doctorService.getAllDoctors();
-//        Appointment appointment= new Appointment();
-//        theModel.addAttribute("appointment", appointment);
-//        theModel.addAttribute("patients", patients);
-//        theModel.addAttribute("doctors", doctors);
-//        return "appointments/create-appointment";
-//    }
+    /// TODO: testing this functionality delete this later
     @GetMapping("/appointment/create")
-    public String showCreateAppointmentForm(@RequestParam("patId") Long theId, Model theModel) {
-        List<Patient> patients = patientService.getAllPatients();
-        List<Doctor> doctors = doctorService.getAllDoctors();
-        Doctor doctorFound = doctorService.getDoctorByName("sam");
-        Patient foundPatient = patientService.getPatientById(theId);
-        Appointment appointment = new Appointment();
-        theModel.addAttribute("appointment", appointment);
-        //theModel.addAttribute("patients", patients);
-        theModel.addAttribute("patient", theId);
-        theModel.addAttribute("doctor", doctorFound.getId());
+    public String showCreateAppointmentForm(@RequestParam("patId") Long thePatId,
+                                             @RequestParam("docId") Long theDocId,
+                                             Model theModel) {
+        System.out.println(thePatId);
+        Doctor doctorFound= doctorService.getDoctorById(theDocId);
+        Patient foundPatient = patientService.getPatientById(thePatId);
+        System.out.println(foundPatient);
+//        Appointment appointment= new Appointment();
+//        appointment.setDoctor(doctorFound);
+//        appointment.setPatient(foundPatient);
+//        theModel.addAttribute("appointment", appointment);
+//        theModel.addAttribute("patient", foundPatient);
+//        theModel.addAttribute("doctor", doctorFound);
         return "appointments/create-appointment";
     }
+
 
     @PostMapping("/appointment/save")
     public String saveAppointment(@Valid @ModelAttribute("appointment") Appointment theAppointment, BindingResult result) {
