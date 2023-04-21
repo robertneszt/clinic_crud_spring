@@ -40,8 +40,8 @@
             <td>
                 <!-- Add Update button/link -->
                 <!--                TODO-->
-                <a th:href="@{/clinic/showFormForUpdate(empId=${tempPat.id})}" class="btn btn-info btn-sm">Update</a>
-                <!-- Add Delete button/link -->
+                <a th:href="@{/clinic/patient/update-patient/{patId}(patId=${tempPat.id})}" class="btn btn-info btn-sm">Update</a>
+
                 <a th:href="@{/clinic/patient/delete/{patId}(patId=${tempPat.id})}" class="btn btn-danger btn-sm" onclick="if (!(confirm('Are you sure you want to delete this patient?'))) return false">
                     Delete
                 </a>

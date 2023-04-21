@@ -25,24 +25,26 @@ public class MainController {
     private final AppointmentService appointmentService;
 
     @Autowired
-    public MainController(DoctorService doctorService, PatientService patientService, AppointmentService appointmentService){
+    public MainController(DoctorService doctorService, PatientService patientService, AppointmentService appointmentService) {
         this.doctorService = doctorService;
         this.patientService = patientService;
         this.appointmentService = appointmentService;
     }
+
     @GetMapping("/")
     public String index() {
         return "index";
     }
+
     @GetMapping("/list-doctors")
-    public String listDoctors(Model theModel){
+    public String listDoctors(Model theModel) {
         List<Doctor> theDoctors = doctorService.getAllDoctors();
         theModel.addAttribute("doctors", theDoctors);
         return "doctor/list-doctors";
     }
 
     @GetMapping("/doctor")
-    public String getDoctorById(@RequestParam("docId") Long theId, Model theModel){
+    public String getDoctorById(@RequestParam("docId") Long theId, Model theModel) {
         Doctor existingDoc = doctorService.getDoctorById(theId);
         theModel.addAttribute("doctor", existingDoc);
         return "doctor/doctor-detail";
@@ -55,14 +57,14 @@ public class MainController {
     // DONE: patients can login TODO: an can see just there appointments or can modify there appointments
     // TODO: 2023-04-18
     @RequestMapping("/doctorLogin")
-    public String getDoctorByEmail(@RequestParam(value = "docEmail") String docEmail, Model theModel){
+    public String getDoctorByEmail(@RequestParam(value = "docEmail") String docEmail, Model theModel) {
 
-        try{
+        try {
             Doctor existingDoc = doctorService.getDoctorByEmail(docEmail);
             theModel.addAttribute("doctor", existingDoc);
             return "doctor/doctor-detail";
 
-        }catch (EntityNotFoundException exception){
+        } catch (EntityNotFoundException exception) {
             theModel.addAttribute("doctor", null);
             theModel.addAttribute("exceptionMessage", exception.getMessage());
             return "error";
@@ -108,7 +110,7 @@ public class MainController {
     }
 
     @GetMapping("/list-patients")
-    public String listPatients(Model theModel){
+    public String listPatients(Model theModel) {
         System.out.println("listing patients");
         List<Patient> thePatients = patientService.getAllPatients();
         theModel.addAttribute("patients", thePatients);
@@ -116,7 +118,7 @@ public class MainController {
     }
 
     @GetMapping("/patient")
-    public String getPatientById(@RequestParam("patId") Long theId, Model theModel){
+    public String getPatientById(@RequestParam("patId") Long theId, Model theModel) {
         Patient existingPat = patientService.getPatientById(theId);
         theModel.addAttribute("patient", existingPat);
         return "patient/patient-detail";
@@ -138,42 +140,42 @@ public class MainController {
     }
 
     @GetMapping("/doctor-appointments")
-    public String getDoctorAppointments(@RequestParam("docId") Long theId, Model theModel){
+    public String getDoctorAppointments(@RequestParam("docId") Long theId, Model theModel) {
         List<Appointment> theAppointments = appointmentService.getAppointmentsByDocId(theId);
         theModel.addAttribute("appointments", theAppointments);
         return "appointment/list-appointments";
     }
 
     @GetMapping("/patient-appointments")
-    public String getPatientAppointments(@RequestParam("patId") Long theId, Model theModel){
+    public String getPatientAppointments(@RequestParam("patId") Long theId, Model theModel) {
         List<Appointment> theAppointments = appointmentService.getAppointmentsByPatId(theId);
         theModel.addAttribute("appointments", theAppointments);
         return "appointment/list-appointments";
     }
 
     @GetMapping("/appointment-by-doctor-phone")
-    public String getAppointmentByDoctorPhone(@RequestParam("docPhone") String thePhone, Model theModel){
+    public String getAppointmentByDoctorPhone(@RequestParam("docPhone") String thePhone, Model theModel) {
         List<Appointment> theAppointments = appointmentService.getAppointmentsByDocPhone(thePhone);
         theModel.addAttribute("appointments", theAppointments);
         return "appointment/list-appointments";
     }
 
     @GetMapping("/appointment-by-patient-phone")
-    public String getAppointmentByPatientPhone(@RequestParam("patPhone") String thePhone, Model theModel){
+    public String getAppointmentByPatientPhone(@RequestParam("patPhone") String thePhone, Model theModel) {
         List<Appointment> theAppointments = appointmentService.getAppointmentsByPatPhone(thePhone);
         theModel.addAttribute("appointments", theAppointments);
         return "appointment/list-appointments";
     }
 
     @GetMapping("/appointment-by-doctor-email")
-    public String getAppointmentByDoctorEmail(@RequestParam("docEmail") String theEmail, Model theModel){
+    public String getAppointmentByDoctorEmail(@RequestParam("docEmail") String theEmail, Model theModel) {
         List<Appointment> theAppointments = appointmentService.getAppointmentsByDocEmail(theEmail);
         theModel.addAttribute("appointments", theAppointments);
         return "appointment/list-appointments";
     }
 
     @GetMapping("/appointment-by-patient-email")
-    public String getAppointmentByPatientEmail(@RequestParam("patEmail") String theEmail, Model theModel){
+    public String getAppointmentByPatientEmail(@RequestParam("patEmail") String theEmail, Model theModel) {
         List<Appointment> theAppointments = appointmentService.getAppointmentsByPatEmail(theEmail);
         theModel.addAttribute("appointments", theAppointments);
         return "appointment/list-appointments";
@@ -190,12 +192,12 @@ public class MainController {
 //        return "appointments/create-appointment";
 //    }
     @GetMapping("/appointment/create")
-    public String showCreateAppointmentForm(@RequestParam("patId") Long theId,Model theModel) {
+    public String showCreateAppointmentForm(@RequestParam("patId") Long theId, Model theModel) {
         List<Patient> patients = patientService.getAllPatients();
         List<Doctor> doctors = doctorService.getAllDoctors();
-        Doctor doctorFound= doctorService.getDoctorByName("sam");
+        Doctor doctorFound = doctorService.getDoctorByName("sam");
         Patient foundPatient = patientService.getPatientById(theId);
-        Appointment appointment= new Appointment();
+        Appointment appointment = new Appointment();
         theModel.addAttribute("appointment", appointment);
         //theModel.addAttribute("patients", patients);
         theModel.addAttribute("patient", theId);
@@ -205,7 +207,7 @@ public class MainController {
 
     @PostMapping("/appointment/save")
     public String saveAppointment(@Valid @ModelAttribute("appointment") Appointment theAppointment, BindingResult result) {
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             return "redirect:/clinic/list-patients";
         }
         appointmentService.saveAppointment(theAppointment);
@@ -239,11 +241,28 @@ public class MainController {
 
     }
 
+    //delete patient routing
     @GetMapping("patient/delete/{patId}")
     public String deletePatient(@PathVariable("patId") long patId) {
         patientService.deletePatient(patId);
         return "redirect:/clinic/patient/patient-list";
 
     }
+
+    // Show update patient form
+    @GetMapping("patient/update-patient/{patId}")
+    public String showUpdatePatientForm(@PathVariable("patId") Long patId, Model model) {
+        Patient patient = patientService.getPatientById(patId); // Retrieve the existing patient from the database
+        model.addAttribute("patient", patient);
+        return "patient/update-patient";
+    }
+
+    // updates patient and brings doctor back to patient-list
+    @PostMapping("patient/update-patient/{patId}")
+    public String updatePatient(Patient patient) {
+        patientService.savePatient(patient);
+        return "redirect:/clinic/list-patients";
+    }
+
 
 }
