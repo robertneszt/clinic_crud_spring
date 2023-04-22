@@ -7,6 +7,8 @@ import com.phpteam.project.model.Patient;
 import com.phpteam.project.service.AppointmentService;
 import com.phpteam.project.service.DoctorService;
 import com.phpteam.project.service.PatientService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,12 +25,14 @@ public class MainController {
     private final DoctorService doctorService;
     private final PatientService patientService;
     private final AppointmentService appointmentService;
+    private final HttpSession session;
 
     @Autowired
-    public MainController(DoctorService doctorService, PatientService patientService, AppointmentService appointmentService) {
+    public MainController(DoctorService doctorService, PatientService patientService, AppointmentService appointmentService, HttpSession session) {
         this.doctorService = doctorService;
         this.patientService = patientService;
         this.appointmentService = appointmentService;
+        this.session = session;
     }
 
     @GetMapping("/")
@@ -44,8 +48,8 @@ public class MainController {
     }
 
     @GetMapping("/doctor")
-    public String getDoctorById(@RequestParam("docId") Long theId, Model theModel) {
-        Doctor existingDoc = doctorService.getDoctorById(theId);
+    public String getDoctorById(@RequestParam("docId") Long docId, Model theModel) {
+        Doctor existingDoc = doctorService.getDoctorById(docId);
         theModel.addAttribute("doctor", existingDoc);
         return "doctor/doctor-detail";
     }
@@ -57,10 +61,15 @@ public class MainController {
     // DONE: patients can login TODO: an can see just there appointments or can modify there appointments
     // TODO: 2023-04-18
     @RequestMapping("/doctorLogin")
-    public String getDoctorByEmail(@RequestParam(value = "docEmail") String docEmail, Model theModel) {
+    public String getDoctorByEmail(@RequestParam(value = "docEmail") String docEmail, Model theModel, HttpServletRequest request) {
 
+
+        HttpSession session = request.getSession();
         try {
             Doctor existingDoc = doctorService.getDoctorByEmail(docEmail);
+            var name = existingDoc.getFirstName();
+            session.setAttribute("user", "my test doc");
+            session.setAttribute("userId", existingDoc.getId());
             theModel.addAttribute("doctor", existingDoc);
             return "doctor/doctor-detail";
 
@@ -71,7 +80,16 @@ public class MainController {
         }
 
     }
-//    @RequestMapping("/doctorLogin2")
+
+    @RequestMapping("/logout")
+    public String logout() {
+        // Invalidate session
+        session.invalidate();
+
+        return "index";
+    }
+
+    //    @RequestMapping("/doctorLogin2")
 //    public String getDoctorByName(@RequestParam(value = "docName") String name, Model theModel){
 //
 //        try{
@@ -86,13 +104,15 @@ public class MainController {
 //        }
 //
 //    }
-//    @RequestMapping("/doctorLogin3")
-//    public String getDoctorByID(@RequestParam(value = "docId") Long docId, Model theModel){
-//
-//            Doctor existingDoc = doctorService.getDoctorById(docId);
-//            theModel.addAttribute("doctor", existingDoc);
-//            return "doctor/doctor-detail";
-//    }
+    @RequestMapping("/doctorHome")
+    public String getDoctorHome(Model theModel, HttpServletRequest request) {
+
+        HttpSession session = request.getSession();
+        var docId = (Long) session.getAttribute("userId");
+        Doctor existingDoc = doctorService.getDoctorById(docId);
+        theModel.addAttribute("doctor", existingDoc);
+        return "doctor/doctor-detail";
+    }
 
     @RequestMapping("/patientLogin")
     public String getPatientByEmail(@RequestParam(value = "patEmail") String patEmail, Model theModel) {
@@ -110,25 +130,28 @@ public class MainController {
     }
 
     @GetMapping("/list-patients")
-    public String listPatients(@RequestParam("docId") Long theDocId, Model theModel) {
+    //@RequestParam("docId") Long theDocId
+    public String listPatients(Model theModel, HttpServletRequest request) {
         System.out.println("listing patients");
+        HttpSession session = request.getSession();
+        var id = (Long) session.getAttribute("userId");
         List<Patient> thePatients = patientService.getAllPatients();
-        Doctor doctorFound= doctorService.getDoctorById(theDocId);
-        theModel.addAttribute("theDoctor",doctorFound);
+        Doctor doctorFound = doctorService.getDoctorById(id);
+        theModel.addAttribute("theDoctor", doctorFound);
         theModel.addAttribute("patients", thePatients);
         return "patient/patient-list";
     }
 
     @GetMapping("/patient")
-    public String getPatientById(@RequestParam("patId") Long theId, Model theModel) {
-        Patient existingPat = patientService.getPatientById(theId);
+    public String getPatientById(@RequestParam("patId") Long patId, Model theModel, HttpSession session) {
+        Patient existingPat = patientService.getPatientById(patId);
         theModel.addAttribute("patient", existingPat);
         return "patient/patient-detail";
     }
 
     // Show create patient form
-    @GetMapping("patient/create-patient")
-    public String showCreatePatientForm(Model model) {
+    @GetMapping("patient/create-patient-form")
+    public String showCreatePatientForm(Model model, HttpSession session) {
         Patient patient = new Patient();
         model.addAttribute("patient", patient);
         return "patient/create-patient";
@@ -136,21 +159,34 @@ public class MainController {
 
     // Handle create patient form submission
     @PostMapping("patient/create-patient")
-    public String createPatient(Patient patient) {
+    public String createPatient(@Valid @ModelAttribute("patient") Patient patient, BindingResult result, HttpSession session) {
         patientService.savePatient(patient);
         return "redirect:/clinic/list-patients";
     }
 
     @GetMapping("/doctor-appointments")
-    public String getDoctorAppointments(@RequestParam("docId") Long theId, Model theModel) {
-        List<Appointment> theAppointments = appointmentService.getAppointmentsByDocId(theId);
-        theModel.addAttribute("appointments", theAppointments);
-        return "appointment/list-appointments";
+    public String getDoctorAppointments(Model theModel, HttpServletRequest request) {
+
+        HttpSession session = request.getSession();
+        Long id = (Long) session.getAttribute("userId");
+
+        try {
+            List<Appointment> theAppointments = appointmentService.getAppointmentsByDocId(id.intValue());
+
+            theModel.addAttribute("appointments", theAppointments);
+            return "appointments/list-appointments";
+
+        } catch (EntityNotFoundException exception) {
+            theModel.addAttribute("exceptionMessage", exception.getMessage());
+            return "error";
+        }
+
+
     }
 
     @GetMapping("/patient-appointments")
-    public String getPatientAppointments(@RequestParam("patId") Long theId, Model theModel) {
-        List<Appointment> theAppointments = appointmentService.getAppointmentsByPatId(theId);
+    public String getPatientAppointments(@RequestParam("patId") Long patId, Model theModel) {
+        List<Appointment> theAppointments = appointmentService.getAppointmentsByPatId(patId.intValue());
         theModel.addAttribute("appointments", theAppointments);
         return "appointment/list-appointments";
     }
@@ -183,38 +219,40 @@ public class MainController {
         return "appointment/list-appointments";
     }
 
-    /// TODO: testing this functionality delete this later
+
     @GetMapping("/appointment/create")
-    public String showCreateAppointmentForm(@RequestParam("patId") Long thePatId,
-                                             @RequestParam("docId") Long theDocId,
-                                             Model theModel) {
-        System.out.println(thePatId);
-        Doctor doctorFound= doctorService.getDoctorById(theDocId);
-        Patient foundPatient = patientService.getPatientById(thePatId);
-        System.out.println(foundPatient);
-//        Appointment appointment= new Appointment();
-//        appointment.setDoctor(doctorFound);
-//        appointment.setPatient(foundPatient);
-//        theModel.addAttribute("appointment", appointment);
-//        theModel.addAttribute("patient", foundPatient);
-//        theModel.addAttribute("doctor", doctorFound);
+    public String showCreateAppointmentForm(@RequestParam("patId") Long thePatId, @RequestParam("docId") Long theDocId, Model theModel) {
+        Appointment appointment = new Appointment();
+        appointment.setDoctor(theDocId.intValue());
+        appointment.setPatient(thePatId.intValue());
+        theModel.addAttribute("appointment", appointment);
+        theModel.addAttribute("patient", thePatId.intValue());
+        theModel.addAttribute("doctor", theDocId.intValue());
         return "appointments/create-appointment";
     }
 
 
     @PostMapping("/appointment/save")
-    public String saveAppointment(@Valid @ModelAttribute("appointment") Appointment theAppointment, BindingResult result) {
+    public String saveAppointment(@Valid @ModelAttribute("appointment") Appointment theAppointment, BindingResult result, HttpServletRequest request) {
         if (result.hasErrors()) {
-            return "redirect:/clinic/list-patients";
+            return "error";
         }
+        System.out.println("distinct");
+        System.out.println(theAppointment.getPatient());
+        //        theAppointment.getDoctor().setId(theAppointment.getDoctor().getId());
+//        theAppointment.getPatient().setId(theAppointment.getPatient().getId());
+//        doctorService.save(theAppointment.getDoctor());
+//        patientService.save(theAppointment.getPatient());
         appointmentService.saveAppointment(theAppointment);
+        HttpSession session = request.getSession();
+        var id = (Long) session.getAttribute("userId");
 
-        return "redirect:/clinic/";
+        return "redirect:/clinic/doctor-appointments";
     }
 
-    @GetMapping("/appointment/edit/{id}")
-    public String showEditAppointmentForm(Model theModel, @PathVariable("id") long theId) {
-        Appointment appointment = appointmentService.getAppointmentById(theId);
+    @GetMapping("/appointment/edit/{aptId}")
+    public String showEditAppointmentForm(Model theModel, @PathVariable("aptId") Long aptId) {
+        Appointment appointment = appointmentService.getAppointmentById(aptId);
         List<Patient> patients = patientService.getAllPatients();
         List<Doctor> doctors = doctorService.getAllDoctors();
         theModel.addAttribute("editAppointment", appointment);
@@ -223,16 +261,26 @@ public class MainController {
         return "appointments/edit-appointment";
     }
 
-    @PostMapping("/appointment/update/{id}")
-    public String updateAppointment(@PathVariable("id") long theId, @ModelAttribute("editAppointment") Appointment theAppointment) {
-        theAppointment.setId(theId);
+    // UPDATE APPOINTMENT
+    @GetMapping("/appointment/update/{aptId}")
+    public String showUpdateAppointmentForm(@PathVariable("aptId") Long aptId, Model model) {
+        Appointment appointment = appointmentService.getAppointmentById(aptId);
+        model.addAttribute("appointment", appointment);
+
+
+        return "appointments/update-appointment";
+    }
+
+    @PostMapping("/appointment/update/{aptId}")
+    public String updateAppointment(@PathVariable("aptId") Long aptId, @ModelAttribute("editAppointment") Appointment theAppointment) {
+        theAppointment.setId(aptId);
         appointmentService.saveAppointment(theAppointment);
         return "redirect:/clinic/list-appointments";
     }
 
     @GetMapping("/appointment/delete/{id}")
-    public String deleteAppointment(@PathVariable("id") long theId) {
-        appointmentService.deleteAppointment(theId);
+    public String deleteAppointment(@PathVariable("id") Long delId) {
+        appointmentService.deleteAppointment(delId);
         return "redirect:/clinic/list-appointments";
 
 
@@ -240,15 +288,15 @@ public class MainController {
 
     //delete patient routing
     @GetMapping("patient/delete/{patId}")
-    public String deletePatient(@PathVariable("patId") long patId) {
+    public String deletePatient(@PathVariable("patId") Long patId, HttpSession session) {
         patientService.deletePatient(patId);
-        return "redirect:/clinic/patient/patient-list";
+        return "redirect:/clinic/list-patients";
 
     }
 
     // Show update patient form
     @GetMapping("patient/update-patient/{patId}")
-    public String showUpdatePatientForm(@PathVariable("patId") Long patId, Model model) {
+    public String showUpdatePatientForm(@PathVariable("patId") Long patId, Model model, HttpSession session) {
         Patient patient = patientService.getPatientById(patId); // Retrieve the existing patient from the database
         model.addAttribute("patient", patient);
         return "patient/update-patient";
@@ -256,7 +304,7 @@ public class MainController {
 
     // updates patient and brings doctor back to patient-list
     @PostMapping("patient/update-patient/{patId}")
-    public String updatePatient(Patient patient) {
+    public String updatePatient(Patient patient, HttpSession session) {
         patientService.savePatient(patient);
         return "redirect:/clinic/list-patients";
     }

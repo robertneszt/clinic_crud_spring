@@ -13,7 +13,9 @@
 <body>
 <div class="container">
 <h1>Doctor details</h1>
-  <a th:href="@{/}" class="btn btn-danger btn-sm mb-3">Logout</a>
+  <a th:href="@{/clinic/logout}" class="btn btn-danger btn-sm mb-3">Logout</a>
+  <p th:text="${session.user}"></p>
+  <p th:text="${session.userId}"></p>
   <table class="table table-bordered tabled-striped">
     <thead class="table-dark">
     <tr>
@@ -32,10 +34,12 @@
     </tr>
     </tbody>
   </table>
-  <a th:href="@{/clinic/}" class="btn btn-primary btn-sm mb-3">View your appointment schedule</a>
-  <a th:href="@{/clinic/appointment/create}" class="btn btn-primary btn-sm mb-3">Book new appointment for a patient</a>
-  <a th:href="@{/clinic/list-patients(docId=${doctor.id})}" class="btn btn-primary btn-sm mb-3">View all patients</a>
+<!--  <a th:href="@{/clinic/doctor-appointments(docId=${session.userId})}" class="btn btn-primary btn-sm mb-3">View your appointment schedule</a>-->
+  <a th:href="@{/clinic/doctor-appointments}" class="btn btn-primary btn-sm mb-3">View your appointment schedule</a>
 
+  <!--  <a th:href="@{/clinic/appointment/create}" class="btn btn-primary btn-sm mb-3">Book new appointment for a patient</a>-->
+  <a th:href="@{/clinic/list-patients}" class="btn btn-primary btn-sm mb-3">View all patients</a>
+<!--  (docId=${session.userId})-->
   <!--  add buttons to view/modify all appointments-->
   <!--  add buttons to view all patients-->
 <!--  add button to book new appointments -->

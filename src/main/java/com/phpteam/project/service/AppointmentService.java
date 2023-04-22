@@ -8,13 +8,13 @@ public interface AppointmentService {
 
     List<Appointment> getAllAppointments();
 
-    Long saveAppointment(Appointment appointment);
+    void saveAppointment(Appointment appointment);
 
     Appointment getAppointmentById(Long theId);
 
-    List<Appointment> getAppointmentsByDocId(Long docId);
+    List<Appointment> getAppointmentsByDocId(Integer docId);
 
-    List<Appointment> getAppointmentsByPatId(Long patId);
+    List<Appointment> getAppointmentsByPatId(Integer patId);
 
     List<Appointment> getAppointmentsByDocPhone(String docPhone);
 

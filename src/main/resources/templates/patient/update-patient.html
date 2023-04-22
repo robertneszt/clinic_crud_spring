@@ -10,7 +10,8 @@
 <div class="container">
   <h3>Update Patient</h3>
   <hr>
-  <form th:action="@{/clinic/patient/update-patient/{patId}(patId=${patient.id})}" th:object="${patient}" method="post">
+<!--  @{/clinic/patient/update-patient/{patId}(patId=${patient.id})}-->
+  <form th:action="@{/clinic/patient/create-patient}" th:object="${patient}" method="post">
     <input type="hidden" th:field="*{id}" th:value="${patient.id}"/>
     <div class="form-group">
       <label for="firstName">First Name:</label>

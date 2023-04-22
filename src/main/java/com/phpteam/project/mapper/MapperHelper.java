@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class MapperHelper {
@@ -50,8 +51,33 @@ public class MapperHelper {
        return mapper.convertValue(patientEntity, Patient.class);
     }
 
-    public AppointmentEntity convertAppointmentToAppointEntity(Appointment appointment){
-        return mapper.convertValue(appointment, AppointmentEntity.class);
+    public AppointmentEntity convertAppointmentToAppointEntity(Appointment appointment) {
+        return AppointmentEntity.builder()
+                .id(appointment.getId())
+                .doctorId(appointment.getDoctor().longValue())
+                .patientId(appointment.getPatient().longValue())
+                .datetime(appointment.getDatetime())
+                .status(appointment.getStatus())
+                .build();
+    }
+//    public Appointment convertAppointmentEntityToAppointment(AppointmentEntity appointmentEntity){
+//
+//    }
+    public Appointment convertAppointmentEntityToAppointment(AppointmentEntity appointmentEntity){
+        return Appointment.builder().id(appointmentEntity.getId()).
+                datetime(appointmentEntity.getDatetime()).
+                doctor(appointmentEntity.getDoctorId().intValue()).
+                patient(appointmentEntity.getPatientId().intValue()).
+                status(appointmentEntity.getStatus()).
+                build();
+
+    }
+    public List<Appointment> convertAppointmentEntityListToAppointmentList(List<AppointmentEntity> appointmentEntity){
+        List<Appointment> appointmentList = new ArrayList<>(appointmentEntity.size());
+        for(AppointmentEntity entity:appointmentEntity){
+            appointmentList.add(convertAppointmentEntityToAppointment(entity));
+        }
+        return appointmentList;
     }
 
     public PatientEntity convertPatientToPatientEntity(Patient patient) {

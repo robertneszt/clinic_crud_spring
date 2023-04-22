@@ -16,9 +16,14 @@
     <hr>
 
     <!-- Add a button-->
-    <a th:href="@{/clinic/patient/create-patient}" class="btn btn-primary btn-sm mb-3">
+    <a th:href="@{/clinic/patient/create-patient-form}" class="btn btn-primary btn-sm mb-3">
         Add Patient
     </a>
+    <a th:href="@{/clinic/logout}" class="btn btn-danger btn-sm mb-3">Logout</a>
+    <a th:href="@{/clinic/doctorHome}" class="btn btn-primary btn-sm mb-3">
+        Back to doctor home
+    </a>
+
 
     <table class="table table-bordered tabled-striped">
         <thead class="table-dark">
@@ -50,7 +55,7 @@
                 <!--                    Delete</a>-->
 
 <!--                <a th:href="@{/clinic/appointment/create(patId=${tempPat.id})}" class="btn btn-info btn-sm">Book</a>-->
-                <a th:href="@{/clinic/appointment/create(patId=${tempPat.id}, docId=${theDoctor.id})}" class="btn btn-info btn-sm">Book2</a>
+                <a th:href="@{/clinic/appointment/create(patId=${tempPat.id}, docId=${session.userId})}" class="btn btn-info btn-sm">Book Appointment</a>
             </td>
         </tr>
         </tbody>
