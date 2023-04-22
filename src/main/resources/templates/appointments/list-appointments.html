@@ -20,8 +20,8 @@
         <thead class="table-dark">
         <tr>
             <th>Date</th>
-            <th>Patient ID</th>
-            <th>Doctor ID</th>
+            <th>Patient's Name</th>
+            <th>Doctor's Name</th>
             <th>Status</th>
             <th>Action</th>
         </tr>
@@ -29,8 +29,8 @@
         <tbody>
         <tr th:each="tempApt : ${appointments}">
             <td th:text="${tempApt.datetime}"></td>
-            <td th:text="${tempApt.patient}"></td>
-            <td th:text="${tempApt.doctor}"></td>
+            <td th:text="${tempApt.patientName}"></td>
+            <td th:text="${tempApt.doctorName}"></td>
             <td th:text="${tempApt.status}"></td>
 
             <!--            <td th:text="${tempApt.email}"></td>-->

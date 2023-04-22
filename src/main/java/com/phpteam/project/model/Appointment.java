@@ -29,5 +29,8 @@ public class Appointment {
 
     private String status;
 
+//Transient
 
+    private String doctorName;
+    private String patientName;
 }

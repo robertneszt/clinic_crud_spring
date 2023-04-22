@@ -173,7 +173,12 @@ public class MainController {
 
         try {
             List<Appointment> theAppointments = appointmentService.getAppointmentsByDocId(id.intValue());
-
+            for (final Appointment appointment: theAppointments ){
+                Doctor doctor = doctorService.getDoctorById(appointment.getDoctor().longValue());
+                Patient patient = patientService.getPatientById(appointment.getPatient().longValue());
+                appointment.setDoctorName(doctor.getFirstName()+ " " + doctor.getLastName());
+                appointment.setPatientName(patient.getFirstName()+ " " + patient.getLastName());
+            }
             theModel.addAttribute("appointments", theAppointments);
             return "appointments/list-appointments";
 
