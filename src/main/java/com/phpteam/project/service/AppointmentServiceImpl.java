@@ -101,7 +101,14 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public void deleteAppointment(Long appId) {
+    public void deleteAppointment(Long aptId) {
+        Optional<AppointmentEntity> foundApt = appointmentRepository.findById(aptId);
 
+        if(foundApt.isPresent()){
+            AppointmentEntity appointmentEntity = foundApt.get();
+            appointmentRepository.delete(appointmentEntity);
+        } else {
+            throw new EntityNotFoundException("The appointment is not found, please enter an existing appointment ID. ");
+        }
     }
 }

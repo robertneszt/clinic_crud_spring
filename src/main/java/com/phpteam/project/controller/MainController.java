@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @Controller
 @RequestMapping("/clinic")
 public class MainController {
@@ -271,17 +272,24 @@ public class MainController {
         return "appointments/update-appointment";
     }
 
+
+
     @PostMapping("/appointment/update/{aptId}")
     public String updateAppointment(@PathVariable("aptId") Long aptId, @ModelAttribute("editAppointment") Appointment theAppointment) {
         theAppointment.setId(aptId);
         appointmentService.saveAppointment(theAppointment);
         return "redirect:/clinic/list-appointments";
     }
-
-    @GetMapping("/appointment/delete/{id}")
-    public String deleteAppointment(@PathVariable("id") Long delId) {
-        appointmentService.deleteAppointment(delId);
-        return "redirect:/clinic/list-appointments";
+            // DELETE APPOINTMENT
+    @GetMapping("/appointment/delete/{aptId}")
+    public String deleteAppointment(@PathVariable("aptId") Long aptId, HttpSession session) {
+        Integer userId = ((Long) session.getAttribute("userId")).intValue();
+        Appointment appointment = appointmentService.getAppointmentById(aptId);
+       if (userId==appointment.getDoctor() || userId== appointment.getPatient())
+       {
+          appointmentService.deleteAppointment(aptId);
+       }
+        return "redirect:/clinic/doctor-appointments";
 
 
     }
