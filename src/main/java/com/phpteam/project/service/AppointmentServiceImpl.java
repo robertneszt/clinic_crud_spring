@@ -45,9 +45,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         if (foundApt.isEmpty()) {
             return new ArrayList<Appointment>();
-//            throw new EntityNotFoundException("The appointment could not be found for this doctor");
         } else {
-
             return mapperHelper.convertAppointmentEntityListToAppointmentList(foundApt);
         }
     }
@@ -58,9 +56,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         List<AppointmentEntity> appointmentList = new ArrayList<>();
         if (foundApt.isEmpty()) {
             return new ArrayList<Appointment>();
-//                        throw new EntityNotFoundException("No appointments found for this patient");
         } else {
-//            appointmentList.add(foundApt.get());
             return mapperHelper.convertAppointmentEntityListToAppointmentList(foundApt);
         }
     }
@@ -96,4 +92,12 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new EntityNotFoundException("The appointment is not found, please enter an existing appointment ID. ");
         }
     }
+    @Override
+    public void deleteAppointmentsForPatientId(Integer patId){
+        List<AppointmentEntity> foundApt = (appointmentRepository.findByPatientId(patId));
+        for (final AppointmentEntity appointmentEntity: foundApt){
+            appointmentRepository.delete(appointmentEntity);
+        }
+    }
+
 }

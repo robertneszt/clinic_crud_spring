@@ -26,5 +26,7 @@ public interface AppointmentService {
 
     void deleteAppointment(Long appId);
 
+    void deleteAppointmentsForPatientId(Integer patId);
+
 
 }

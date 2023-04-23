@@ -308,6 +308,7 @@ public class MainController {
     //delete patient routing
     @GetMapping("patient/delete/{patId}")
     public String deletePatient(@PathVariable("patId") Long patId, HttpSession session) {
+        appointmentService.deleteAppointmentsForPatientId(patId.intValue());
         patientService.deletePatient(patId);
         return "redirect:/clinic/list-patients";
 
