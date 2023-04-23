@@ -62,6 +62,7 @@ public class MapperHelper {
     }
 
     public List<Appointment> convertAppointmentEntityListToAppointmentList(List<AppointmentEntity> appointmentEntity) {
+
         List<Appointment> appointmentList = new ArrayList<>(appointmentEntity.size());
         for (AppointmentEntity entity : appointmentEntity) {
             appointmentList.add(convertAppointmentEntityToAppointment(entity));

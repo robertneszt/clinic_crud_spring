@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @Controller
 @RequestMapping("/clinic")
 public class MainController {
@@ -56,13 +57,13 @@ public class MainController {
 
     @RequestMapping("/doctorLogin")
     public String getDoctorByEmail(@RequestParam(value = "docEmail") String docEmail, Model theModel, HttpServletRequest request) {
-
         HttpSession session = request.getSession();
         try {
             Doctor existingDoc = doctorService.getDoctorByEmail(docEmail);
             var name = existingDoc.getFirstName();
-            session.setAttribute("user", "my test doc");
+            session.setAttribute("user", "Session logged in");
             session.setAttribute("userId", existingDoc.getId());
+            session.setAttribute("userType", "doctor");
             theModel.addAttribute("doctor", existingDoc);
             return "doctor/doctor-detail";
 
@@ -81,21 +82,33 @@ public class MainController {
         return "index";
     }
 
-    @RequestMapping("/doctorHome")
-    public String getDoctorHome(Model theModel, HttpServletRequest request) {
+    @RequestMapping("/home")
+    public String redirectToHome(Model theModel, HttpServletRequest request) {
 
         HttpSession session = request.getSession();
-        var docId = (Long) session.getAttribute("userId");
-        Doctor existingDoc = doctorService.getDoctorById(docId);
-        theModel.addAttribute("doctor", existingDoc);
-        return "doctor/doctor-detail";
+        if(session.getAttribute("userType")=="doctor"){
+            var docId = (Long) session.getAttribute("userId");
+            Doctor existingDoc = doctorService.getDoctorById(docId);
+            theModel.addAttribute("doctor", existingDoc);
+            return "doctor/doctor-detail";
+        } else if(session.getAttribute("userType")=="patient"){
+            var patId = (Long) session.getAttribute("userId");
+            Patient existingPat = patientService.getPatientById(patId);
+            theModel.addAttribute("patient", existingPat);
+            return "patient/patient-detail";
+        }
+        else {
+            return "error";
+        }
     }
 
     @RequestMapping("/patientLogin")
-    public String getPatientByEmail(@RequestParam(value = "patEmail") String patEmail, Model theModel) {
-
+    public String getPatientByEmail(@RequestParam(value = "patEmail") String patEmail, Model theModel, HttpServletRequest request) {
+        HttpSession session = request.getSession();
         try {
             Patient existingPat = patientService.getPatientByEmail(patEmail);
+            session.setAttribute("userId", existingPat.getId());
+            session.setAttribute("userType", "patient");
             theModel.addAttribute("patient", existingPat);
             return "patient/patient-detail";
 
@@ -109,7 +122,6 @@ public class MainController {
     @GetMapping("/list-patients")
     //@RequestParam("docId") Long theDocId
     public String listPatients(Model theModel, HttpServletRequest request) {
-        System.out.println("listing patients");
         HttpSession session = request.getSession();
         var id = (Long) session.getAttribute("userId");
         List<Patient> thePatients = patientService.getAllPatients();
@@ -167,10 +179,25 @@ public class MainController {
     }
 
     @GetMapping("/patient-appointments")
-    public String getPatientAppointments(@RequestParam("patId") Long patId, Model theModel) {
-        List<Appointment> theAppointments = appointmentService.getAppointmentsByPatId(patId.intValue());
-        theModel.addAttribute("appointments", theAppointments);
-        return "appointment/list-appointments";
+    public String getPatientAppointments(Model theModel, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Long id = (Long) session.getAttribute("userId");
+
+        try {
+            List<Appointment> theAppointments = appointmentService.getAppointmentsByPatId(id.intValue());
+            for (final Appointment appointment : theAppointments) {
+                Doctor doctor = doctorService.getDoctorById(appointment.getDoctor().longValue());
+                Patient patient = patientService.getPatientById(appointment.getPatient().longValue());
+                appointment.setDoctorName(doctor.getFirstName() + " " + doctor.getLastName());
+                appointment.setPatientName(patient.getFirstName() + " " + patient.getLastName());
+            }
+            theModel.addAttribute("appointments", theAppointments);
+            return "appointments/list-appointments";
+
+        } catch (EntityNotFoundException exception) {
+            theModel.addAttribute("exceptionMessage", exception.getMessage());
+            return "error";
+        }
     }
 
     @GetMapping("/appointment-by-doctor-phone")
@@ -219,9 +246,6 @@ public class MainController {
         if (result.hasErrors()) {
             return "error";
         }
-        System.out.println("distinct");
-        System.out.println(theAppointment.getPatient());
-
         appointmentService.saveAppointment(theAppointment);
         HttpSession session = request.getSession();
         var id = (Long) session.getAttribute("userId");
@@ -251,11 +275,17 @@ public class MainController {
     }
 
 
-    @PostMapping("/appointment/update/{aptId}")
-    public String updateAppointment(@PathVariable("aptId") Long aptId, @ModelAttribute("editAppointment") Appointment theAppointment) {
-        theAppointment.setId(aptId);
+    @PostMapping("/appointment/update")
+    public String updateAppointment(@ModelAttribute("editAppointment") Appointment theAppointment, HttpSession session) {
         appointmentService.saveAppointment(theAppointment);
-        return "redirect:/clinic/list-appointments";
+        if (session.getAttribute("userType") == "doctor") {
+            return "redirect:/clinic/doctor-appointments";
+
+        } else if (session.getAttribute("userType") == "patient") {
+
+            return "redirect:/clinic/patient-appointments";
+
+        } else return "error";
     }
 
     // DELETE APPOINTMENT
@@ -266,7 +296,14 @@ public class MainController {
         if (userId == appointment.getDoctor() || userId == appointment.getPatient()) {
             appointmentService.deleteAppointment(aptId);
         }
-        return "redirect:/clinic/doctor-appointments";
+        if (session.getAttribute("userType") == "doctor") {
+            return "redirect:/clinic/doctor-appointments";
+
+        } else if (session.getAttribute("userType") == "patient") {
+
+            return "redirect:/clinic/patient-appointments";
+
+        } else return "error";
 
 
     }

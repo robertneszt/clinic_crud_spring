@@ -14,5 +14,6 @@ public interface AppointmentRepository extends JpaRepository<AppointmentEntity, 
     @Query("SELECT e FROM AppointmentEntity e WHERE e.doctorId=?1")
     List<AppointmentEntity> findAllDoctor(Long doctorId);
 
-    Optional<AppointmentEntity> findByPatientId(Integer id);
+    @Query("SELECT e FROM AppointmentEntity e WHERE e.patientId=?1")
+    List <AppointmentEntity>findByPatientId(Integer id);
 }

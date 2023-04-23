@@ -4,7 +4,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width , initial-scale = 1 , shrink-to-fit=no">
 
-  <!--        https://getbootstrap.com/-->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
   <link rel="stylesheet" th:href="@{/css/demo.css}">
   <title>Doctor Details</title>
@@ -14,8 +13,6 @@
 <div class="container">
 <h1>Doctor details</h1>
   <a th:href="@{/clinic/logout}" class="btn btn-danger btn-sm mb-3">Logout</a>
-  <p th:text="${session.user}"></p>
-  <p th:text="${session.userId}"></p>
   <table class="table table-bordered tabled-striped">
     <thead class="table-dark">
     <tr>
@@ -34,16 +31,8 @@
     </tr>
     </tbody>
   </table>
-<!--  <a th:href="@{/clinic/doctor-appointments(docId=${session.userId})}" class="btn btn-primary btn-sm mb-3">View your appointment schedule</a>-->
   <a th:href="@{/clinic/doctor-appointments}" class="btn btn-primary btn-sm mb-3">View your appointment schedule</a>
-
-  <!--  <a th:href="@{/clinic/appointment/create}" class="btn btn-primary btn-sm mb-3">Book new appointment for a patient</a>-->
   <a th:href="@{/clinic/list-patients}" class="btn btn-primary btn-sm mb-3">View all patients</a>
-<!--  (docId=${session.userId})-->
-  <!--  add buttons to view/modify all appointments-->
-  <!--  add buttons to view all patients-->
-<!--  add button to book new appointments -->
-
 </div>
 </body>
 </html>

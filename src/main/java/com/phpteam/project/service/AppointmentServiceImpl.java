@@ -44,7 +44,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         var foundApt = appointmentRepository.findAllDoctor(docId.longValue());
 
         if (foundApt.isEmpty()) {
-            throw new EntityNotFoundException("The appointment could not be found for this doctor");
+            return new ArrayList<Appointment>();
+//            throw new EntityNotFoundException("The appointment could not be found for this doctor");
         } else {
 
             return mapperHelper.convertAppointmentEntityListToAppointmentList(foundApt);
@@ -53,16 +54,15 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public List<Appointment> getAppointmentsByPatId(Integer patId) {
-        var foundApt = (appointmentRepository.findByPatientId(patId));
+       var foundApt = (appointmentRepository.findByPatientId(patId));
         List<AppointmentEntity> appointmentList = new ArrayList<>();
         if (foundApt.isEmpty()) {
-            throw new EntityNotFoundException("No appointments found for this patient");
+            return new ArrayList<Appointment>();
+//                        throw new EntityNotFoundException("No appointments found for this patient");
         } else {
-            appointmentList.add(foundApt.get());
-            return mapperHelper.convertAppointmentEntityListToAppointmentList(appointmentList);
+//            appointmentList.add(foundApt.get());
+            return mapperHelper.convertAppointmentEntityListToAppointmentList(foundApt);
         }
-
-
     }
 
     @Override

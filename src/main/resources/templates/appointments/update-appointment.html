@@ -13,21 +13,10 @@
 <div class="container">
   <h3>Schedule your appointments here</h3>
   <h2>Add Appointment</h2>
-  <form th:action="@{/clinic/appointment/save}" th:object="${appointment}" method="POST">
-    <!--        <input th:field="*{doctor.id}" hidden>-->
+  <form th:action="@{/clinic/appointment/update}" th:object="${appointment}" method="POST">
+    <input th:field="*{id}" hidden>
     <input th:field="*{doctor}" hidden>
-    <!--        <input th:field="*{doctor.firstName}">-->
-    <!--        <input th:field="*{doctor.lastName}">-->
-    <!--        <input th:field="*{doctor.email}" hidden>-->
-    <!--        <input th:field="*{doctor.phone}" hidden>-->
-    <!--        <input th:field="*{doctor.password}" hidden>-->
-    <!--        <input th:field="*{patient.id}" hidden>-->
     <input th:field="*{patient}" hidden>
-    <!--        <input th:field="*{patient.firstName}">-->
-    <!--        <input th:field="*{patient.lastName}">-->
-    <!--        <input th:field="*{patient.email}">-->
-    <!--        <input th:field="*{patient.phone}">-->
-    <!--        <input th:field="*{patient.password}" hidden>-->
     <label for="appointment_datetime">Date and Time:</label>
     <input th:field="*{datetime}" type="datetime-local" id="appointment_datetime" name="appointment_datetime"
            required>
