@@ -86,18 +86,17 @@ public class MainController {
     public String redirectToHome(Model theModel, HttpServletRequest request) {
 
         HttpSession session = request.getSession();
-        if(session.getAttribute("userType")=="doctor"){
+        if (session.getAttribute("userType") == "doctor") {
             var docId = (Long) session.getAttribute("userId");
             Doctor existingDoc = doctorService.getDoctorById(docId);
             theModel.addAttribute("doctor", existingDoc);
             return "doctor/doctor-detail";
-        } else if(session.getAttribute("userType")=="patient"){
+        } else if (session.getAttribute("userType") == "patient") {
             var patId = (Long) session.getAttribute("userId");
             Patient existingPat = patientService.getPatientById(patId);
             theModel.addAttribute("patient", existingPat);
             return "patient/patient-detail";
-        }
-        else {
+        } else {
             return "error";
         }
     }
@@ -174,8 +173,6 @@ public class MainController {
             theModel.addAttribute("exceptionMessage", exception.getMessage());
             return "error";
         }
-
-
     }
 
     @GetMapping("/patient-appointments")

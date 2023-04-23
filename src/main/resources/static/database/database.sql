@@ -18,8 +18,11 @@
 --
 -- Table structure for table `doctor`
 --
-
+DROP TABLE IF EXISTS medical_record;
+DROP TABLE IF EXISTS appointment;
 DROP TABLE IF EXISTS `doctor`;
+DROP TABLE IF EXISTS patient;
+
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `doctor` (

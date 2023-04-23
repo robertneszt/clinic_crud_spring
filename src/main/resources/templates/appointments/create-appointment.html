@@ -8,16 +8,13 @@
     <link rel="stylesheet" th:href="@{/css/demo.css}">
     <title>Book Appointment</title>
 </head>
-
 <body>
 <div class="container">
     <h3>Schedule your appointments here</h3>
     <h2>Add Appointment</h2>
     <form th:action="@{/clinic/appointment/save}" th:object="${appointment}" method="POST">
         <input th:field="*{doctor}" hidden>
-
         <input th:field="*{patient}" hidden>
-
         <label for="appointment_datetime">Date and Time:</label>
         <input th:field="*{datetime}" type="datetime-local" id="appointment_datetime" name="appointment_datetime"
                required>

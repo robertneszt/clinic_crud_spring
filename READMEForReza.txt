@@ -1,5 +1,7 @@
+0. Update application.properties with your proper db setting (root password etc.)
 1. run sql query from resources folder
-2. Use a provided doctor email to login to doctor session(no admin that can create doctors currently available)
+2. Use a provided doctor email to login to doctor session(
+no admin that can create doctors currently available, shubh@gmail.com and sam@gmail.com are our hard coded doctors)
 3. can CRUD patients as doctor, and can CRUD an appointment for patients. Doctors can manage their own appointments only.
 4. log into any created patient
 5. Patients can view their own booked appointment(s) only, can delete appointments and update them but cannot create, (only doctor).
