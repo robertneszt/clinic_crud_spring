@@ -24,57 +24,46 @@ public class MapperHelper {
         this.mapper = mapper;
     }
 
-    public List<Doctor> convertDoctorEntityListToDoctorList(List<DoctorEntity> entities){
+    public List<Doctor> convertDoctorEntityListToDoctorList(List<DoctorEntity> entities) {
         List<Doctor> doctors = new ArrayList<>();
-        for(DoctorEntity entity: entities){
+        for (DoctorEntity entity : entities) {
             doctors.add(mapper.convertValue(entity, Doctor.class));
         }
         return doctors;
     }
 
-    public DoctorEntity convertDoctorToDoctorEntity(Doctor doctor){
+    public DoctorEntity convertDoctorToDoctorEntity(Doctor doctor) {
         return mapper.convertValue(doctor, DoctorEntity.class);
     }
 
-    public Doctor convertDoctorEntityToDoctor(DoctorEntity doctorEntity){
+    public Doctor convertDoctorEntityToDoctor(DoctorEntity doctorEntity) {
         return mapper.convertValue(doctorEntity, Doctor.class);
     }
 
-    public List<Patient> convertPatientEntityListToPatientList(List<PatientEntity> patientEntityList){
+    public List<Patient> convertPatientEntityListToPatientList(List<PatientEntity> patientEntityList) {
         List<Patient> patientList = new ArrayList<>(patientEntityList.size());
-        for(PatientEntity patientEntity:patientEntityList){
+        for (PatientEntity patientEntity : patientEntityList) {
             patientList.add(mapper.convertValue(patientEntity, Patient.class));
         }
         return patientList;
     }
-    public Patient convertPatientEntityToPatient(PatientEntity patientEntity){
-       return mapper.convertValue(patientEntity, Patient.class);
+
+    public Patient convertPatientEntityToPatient(PatientEntity patientEntity) {
+        return mapper.convertValue(patientEntity, Patient.class);
     }
 
     public AppointmentEntity convertAppointmentToAppointEntity(Appointment appointment) {
-        return AppointmentEntity.builder()
-                .id(appointment.getId())
-                .doctorId(appointment.getDoctor().longValue())
-                .patientId(appointment.getPatient().longValue())
-                .datetime(appointment.getDatetime())
-                .status(appointment.getStatus())
-                .build();
+        return AppointmentEntity.builder().id(appointment.getId()).doctorId(appointment.getDoctor().longValue()).patientId(appointment.getPatient().longValue()).datetime(appointment.getDatetime()).status(appointment.getStatus()).build();
     }
-//    public Appointment convertAppointmentEntityToAppointment(AppointmentEntity appointmentEntity){
-//
-//    }
-    public Appointment convertAppointmentEntityToAppointment(AppointmentEntity appointmentEntity){
-        return Appointment.builder().id(appointmentEntity.getId()).
-                datetime(appointmentEntity.getDatetime()).
-                doctor(appointmentEntity.getDoctorId().intValue()).
-                patient(appointmentEntity.getPatientId().intValue()).
-                status(appointmentEntity.getStatus()).
-                build();
+
+    public Appointment convertAppointmentEntityToAppointment(AppointmentEntity appointmentEntity) {
+        return Appointment.builder().id(appointmentEntity.getId()).datetime(appointmentEntity.getDatetime()).doctor(appointmentEntity.getDoctorId().intValue()).patient(appointmentEntity.getPatientId().intValue()).status(appointmentEntity.getStatus()).build();
 
     }
-    public List<Appointment> convertAppointmentEntityListToAppointmentList(List<AppointmentEntity> appointmentEntity){
+
+    public List<Appointment> convertAppointmentEntityListToAppointmentList(List<AppointmentEntity> appointmentEntity) {
         List<Appointment> appointmentList = new ArrayList<>(appointmentEntity.size());
-        for(AppointmentEntity entity:appointmentEntity){
+        for (AppointmentEntity entity : appointmentEntity) {
             appointmentList.add(convertAppointmentEntityToAppointment(entity));
         }
         return appointmentList;

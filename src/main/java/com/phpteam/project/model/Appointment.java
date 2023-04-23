@@ -16,17 +16,9 @@ import java.time.LocalDateTime;
 public class Appointment {
 
     private Long id;
-
-
     private Integer doctor;
-
-
     private Integer patient;
-
-
-
     private LocalDateTime datetime;
-
     private String status;
 
 //Transient

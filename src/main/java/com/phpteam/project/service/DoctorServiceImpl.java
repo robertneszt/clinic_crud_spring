@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class DoctorServiceImpl implements DoctorService{
+public class DoctorServiceImpl implements DoctorService {
 
     private final DoctorRepository doctorRepository;
     private final MapperHelper mapperHelper;
@@ -29,50 +29,30 @@ public class DoctorServiceImpl implements DoctorService{
         return mapperHelper.convertDoctorEntityListToDoctorList(doctorEntities);
     }
 
-//    @Override
-//    public Long save(Doctor doctor) {
-//        DoctorEntity entity = mapperHelper.convertDoctorToDoctorEntity(doctor);
-//        var result = doctorRepository.save(entity);
-//        return result.getId();
-//    }
-
     @Override
-    public Doctor getDoctorById(Long docId){
+    public Doctor getDoctorById(Long docId) {
         Optional<DoctorEntity> foundDoc = doctorRepository.findById(docId);
         return foundDoc.map(mapperHelper::convertDoctorEntityToDoctor).orElse(null);
     }
 
     @Override
     public Doctor getDoctorByName(String name) {
-        Optional<DoctorEntity> foundDoc=  doctorRepository.findByName(name);
-        if(foundDoc.isEmpty()){
+        Optional<DoctorEntity> foundDoc = doctorRepository.findByName(name);
+        if (foundDoc.isEmpty()) {
             throw new EntityNotFoundException("The doctor not found, please enter registered email ");
-        }else{
+        } else {
             return mapperHelper.convertDoctorEntityToDoctor(foundDoc.get());
         }
     }
 
     @Override
     public Doctor getDoctorByEmail(String emailId) {
-      Optional<DoctorEntity> foundDoc=  doctorRepository.findByEmail(emailId);
-       if(foundDoc.isEmpty()){
-           throw new EntityNotFoundException("The doctor not found, please enter registered email ");
-       }else{
-           return mapperHelper.convertDoctorEntityToDoctor(foundDoc.get());
-       }
+        Optional<DoctorEntity> foundDoc = doctorRepository.findByEmail(emailId);
+        if (foundDoc.isEmpty()) {
+            throw new EntityNotFoundException("The doctor not found, please enter registered email ");
+        } else {
+            return mapperHelper.convertDoctorEntityToDoctor(foundDoc.get());
+        }
     }
-//    public Doctor getDoctorByName(String name) {
-//        Optional<DoctorEntity> foundDoc=  doctorRepository.findByName(name);
-//        if(foundDoc.isEmpty()){
-//            throw new EntityNotFoundException("The doctor not found, please enter registered email ");
-//        }else{
-//            return mapperHelper.convertDoctorEntityToDoctor(foundDoc.get());
-//        }
-//    }
-
-//    @Override
-//    public void deleteDoctor(Long docId) {
-//        doctorRepository.deleteById(docId);
-//    }
 
 }

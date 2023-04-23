@@ -29,8 +29,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public void saveAppointment(Appointment appointment) {
-//        var result=appointmentRepository.save(mapperHelper.convertAppointmentToAppointEntity(appointment));
-//        return result.getId();
         AppointmentEntity appointmentEntity = mapperHelper.convertAppointmentToAppointEntity(appointment);
         appointmentRepository.save(appointmentEntity);
     }
@@ -52,19 +50,6 @@ public class AppointmentServiceImpl implements AppointmentService {
             return mapperHelper.convertAppointmentEntityListToAppointmentList(foundApt);
         }
     }
-
-
-//    @Override
-//    public List<Appointment> getAppointmentsByDocId(Integer docId) {
-//        var foundApt = (appointmentRepository.findAllByDo(docId));
-//        List<AppointmentEntity> appointmentList= new ArrayList<>();
-//        if(foundApt.isEmpty()){
-//            throw new EntityNotFoundException("the appointment could not be found for this doctor -> ");
-//        }else {
-//            appointmentList.add(foundApt.get());
-//            return mapperHelper.convertAppointmentEntityListToAppointmentList(appointmentList);
-//        }
-//    }
 
     @Override
     public List<Appointment> getAppointmentsByPatId(Integer patId) {
@@ -104,7 +89,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     public void deleteAppointment(Long aptId) {
         Optional<AppointmentEntity> foundApt = appointmentRepository.findById(aptId);
 
-        if(foundApt.isPresent()){
+        if (foundApt.isPresent()) {
             AppointmentEntity appointmentEntity = foundApt.get();
             appointmentRepository.delete(appointmentEntity);
         } else {

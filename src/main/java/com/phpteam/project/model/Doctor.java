@@ -29,9 +29,7 @@ public class Doctor {
     private String email;
     @NotNull(message = "Phone  cannot be empty.")
     private String phone;
-
     private String password;
 
-//    private Enum role;
 
 }

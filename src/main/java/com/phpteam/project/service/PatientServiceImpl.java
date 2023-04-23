@@ -17,6 +17,7 @@ public class PatientServiceImpl implements PatientService {
 
     private final PatientRepository patientRepository;
     private final MapperHelper mapperHelper;
+
     @Autowired
     public PatientServiceImpl(PatientRepository patientRepository, MapperHelper mapperHelper) {
         this.patientRepository = patientRepository;
@@ -25,7 +26,7 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public List<Patient> getAllPatients() {
-        var patientEntities= patientRepository.findAll();
+        var patientEntities = patientRepository.findAll();
         return mapperHelper.convertPatientEntityListToPatientList(patientEntities);
     }
 
@@ -34,12 +35,13 @@ public class PatientServiceImpl implements PatientService {
         Optional<PatientEntity> foundPat = patientRepository.findById(patId);
         return foundPat.map(mapperHelper::convertPatientEntityToPatient).orElse(null);
     }
+
     @Override
     public Patient getPatientByEmail(String patEmail) {
         Optional<PatientEntity> foundPat = patientRepository.findByEmail(patEmail);
-        if(foundPat.isEmpty()){
+        if (foundPat.isEmpty()) {
             throw new EntityNotFoundException("The patient not found, please enter registered email ");
-        }else{
+        } else {
             return foundPat.map(mapperHelper::convertPatientEntityToPatient).orElse(null);
         }
     }
@@ -49,24 +51,11 @@ public class PatientServiceImpl implements PatientService {
         PatientEntity patientEntity = mapperHelper.convertPatientToPatientEntity(patient);
         patientRepository.save(patientEntity);
     }
-
-//    @Override
-//    public void deletePatient(Long patId) {
-////        PatientEntity patientEntity = mapperHelper.convertPatientToPatientEntity(patient);
-//        Optional<PatientEntity> foundPat = patientRepository.findById(patId);
-//        patientRepository.delete(patientEntity);
-//
-//        if(foundPat.isEmpty()){
-//            throw new EntityNotFoundException("The patient not found, please enter a registered patient ID. ");
-//        }else{
-//           foundPat.map(mapperHelper::convertPatientEntityToPatient).orElse(null);
-//        }
-
     @Override
     public void deletePatient(Long patId) {
         Optional<PatientEntity> foundPat = patientRepository.findById(patId);
 
-        if(foundPat.isPresent()){
+        if (foundPat.isPresent()) {
             PatientEntity patientEntity = foundPat.get();
             patientRepository.delete(patientEntity);
         } else {

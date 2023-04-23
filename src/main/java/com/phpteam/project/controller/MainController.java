@@ -17,8 +17,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-
 @Controller
 @RequestMapping("/clinic")
 public class MainController {
@@ -28,6 +26,7 @@ public class MainController {
     private final AppointmentService appointmentService;
     private final HttpSession session;
 
+    // TODO: separate into AppointmentController, DoctorController and PatientController for readability and modularity
     @Autowired
     public MainController(DoctorService doctorService, PatientService patientService, AppointmentService appointmentService, HttpSession session) {
         this.doctorService = doctorService;
@@ -55,15 +54,8 @@ public class MainController {
         return "doctor/doctor-detail";
     }
 
-    //trying 3 different login methods, id, email and name just as test TODO
-    // made email as unique and will use email to login
-    // doctor can view his appointments, all appointments, book an appointment and modify an appointment.
-    // DONE: based upon this we can crate login of patient and give some options.
-    // DONE: patients can login TODO: an can see just there appointments or can modify there appointments
-    // TODO: 2023-04-18
     @RequestMapping("/doctorLogin")
     public String getDoctorByEmail(@RequestParam(value = "docEmail") String docEmail, Model theModel, HttpServletRequest request) {
-
 
         HttpSession session = request.getSession();
         try {
@@ -79,7 +71,6 @@ public class MainController {
             theModel.addAttribute("exceptionMessage", exception.getMessage());
             return "error";
         }
-
     }
 
     @RequestMapping("/logout")
@@ -90,21 +81,6 @@ public class MainController {
         return "index";
     }
 
-    //    @RequestMapping("/doctorLogin2")
-//    public String getDoctorByName(@RequestParam(value = "docName") String name, Model theModel){
-//
-//        try{
-//            Doctor existingDoc = doctorService.getDoctorByName(name);
-//            theModel.addAttribute("doctor", existingDoc);
-//            return "doctor/doctor-detail";
-//
-//        }catch (EntityNotFoundException exception){
-//            theModel.addAttribute("doctor", null);
-//            theModel.addAttribute("exceptionMessage", exception.getMessage());
-//            return "error";
-//        }
-//
-//    }
     @RequestMapping("/doctorHome")
     public String getDoctorHome(Model theModel, HttpServletRequest request) {
 
@@ -173,11 +149,11 @@ public class MainController {
 
         try {
             List<Appointment> theAppointments = appointmentService.getAppointmentsByDocId(id.intValue());
-            for (final Appointment appointment: theAppointments ){
+            for (final Appointment appointment : theAppointments) {
                 Doctor doctor = doctorService.getDoctorById(appointment.getDoctor().longValue());
                 Patient patient = patientService.getPatientById(appointment.getPatient().longValue());
-                appointment.setDoctorName(doctor.getFirstName()+ " " + doctor.getLastName());
-                appointment.setPatientName(patient.getFirstName()+ " " + patient.getLastName());
+                appointment.setDoctorName(doctor.getFirstName() + " " + doctor.getLastName());
+                appointment.setPatientName(patient.getFirstName() + " " + patient.getLastName());
             }
             theModel.addAttribute("appointments", theAppointments);
             return "appointments/list-appointments";
@@ -245,10 +221,7 @@ public class MainController {
         }
         System.out.println("distinct");
         System.out.println(theAppointment.getPatient());
-        //        theAppointment.getDoctor().setId(theAppointment.getDoctor().getId());
-//        theAppointment.getPatient().setId(theAppointment.getPatient().getId());
-//        doctorService.save(theAppointment.getDoctor());
-//        patientService.save(theAppointment.getPatient());
+
         appointmentService.saveAppointment(theAppointment);
         HttpSession session = request.getSession();
         var id = (Long) session.getAttribute("userId");
@@ -256,16 +229,16 @@ public class MainController {
         return "redirect:/clinic/doctor-appointments";
     }
 
-    @GetMapping("/appointment/edit/{aptId}")
-    public String showEditAppointmentForm(Model theModel, @PathVariable("aptId") Long aptId) {
-        Appointment appointment = appointmentService.getAppointmentById(aptId);
-        List<Patient> patients = patientService.getAllPatients();
-        List<Doctor> doctors = doctorService.getAllDoctors();
-        theModel.addAttribute("editAppointment", appointment);
-        theModel.addAttribute("patients", patients);
-        theModel.addAttribute("doctors", doctors);
-        return "appointments/edit-appointment";
-    }
+//    @GetMapping("/appointment/edit/{aptId}")
+//    public String showEditAppointmentForm(Model theModel, @PathVariable("aptId") Long aptId) {
+//        Appointment appointment = appointmentService.getAppointmentById(aptId);
+//        List<Patient> patients = patientService.getAllPatients();
+//        List<Doctor> doctors = doctorService.getAllDoctors();
+//        theModel.addAttribute("editAppointment", appointment);
+//        theModel.addAttribute("patients", patients);
+//        theModel.addAttribute("doctors", doctors);
+//        return "appointments/edit-appointment";
+//    }
 
     // UPDATE APPOINTMENT
     @GetMapping("/appointment/update/{aptId}")
@@ -278,22 +251,21 @@ public class MainController {
     }
 
 
-
     @PostMapping("/appointment/update/{aptId}")
     public String updateAppointment(@PathVariable("aptId") Long aptId, @ModelAttribute("editAppointment") Appointment theAppointment) {
         theAppointment.setId(aptId);
         appointmentService.saveAppointment(theAppointment);
         return "redirect:/clinic/list-appointments";
     }
-            // DELETE APPOINTMENT
+
+    // DELETE APPOINTMENT
     @GetMapping("/appointment/delete/{aptId}")
     public String deleteAppointment(@PathVariable("aptId") Long aptId, HttpSession session) {
         Integer userId = ((Long) session.getAttribute("userId")).intValue();
         Appointment appointment = appointmentService.getAppointmentById(aptId);
-       if (userId==appointment.getDoctor() || userId== appointment.getPatient())
-       {
-          appointmentService.deleteAppointment(aptId);
-       }
+        if (userId == appointment.getDoctor() || userId == appointment.getPatient()) {
+            appointmentService.deleteAppointment(aptId);
+        }
         return "redirect:/clinic/doctor-appointments";
 
 

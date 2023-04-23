@@ -31,7 +31,4 @@ public class PatientEntity {
     @Column(name = "password")
     private String password;
 
-//    @Column(name = "role")
-//    private Enum role;
-
 }
